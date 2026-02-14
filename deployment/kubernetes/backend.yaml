@@ -1,0 +1,97 @@
+# ══════════════════════════════════════════════════════════════════════
+# ILMCS — Backend Deployment + Service + HPA
+# ══════════════════════════════════════════════════════════════════════
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ilmcs-backend
+  namespace: ilmcs
+  labels:
+    app: ilmcs
+    component: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ilmcs
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: ilmcs
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: ilmcs/backend:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ilmcs-secrets
+                  key: database-url
+            - name: REDIS_URL
+              value: redis://ilmcs-redis:6379/0
+            - name: ENVIRONMENT
+              value: production
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ilmcs-backend
+  namespace: ilmcs
+spec:
+  selector:
+    app: ilmcs
+    component: backend
+  ports:
+    - port: 8000
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ilmcs-backend-hpa
+  namespace: ilmcs
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ilmcs-backend
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

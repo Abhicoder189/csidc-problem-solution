@@ -1,0 +1,62 @@
+# ══════════════════════════════════════════════════════════════════════
+# ILMCS — Celery Worker Deployment + HPA
+# ══════════════════════════════════════════════════════════════════════
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ilmcs-worker
+  namespace: ilmcs
+  labels:
+    app: ilmcs
+    component: worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ilmcs
+      component: worker
+  template:
+    metadata:
+      labels:
+        app: ilmcs
+        component: worker
+    spec:
+      containers:
+        - name: worker
+          image: ilmcs/backend:latest
+          command: ["celery", "-A", "tasks", "worker", "--loglevel=info", "--concurrency=4"]
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: ilmcs-secrets
+                  key: database-url
+            - name: REDIS_URL
+              value: redis://ilmcs-redis:6379/0
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ilmcs-worker-hpa
+  namespace: ilmcs
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ilmcs-worker
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60

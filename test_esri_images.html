@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test ESRI Image</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #1a1a1a; color: white; }
+        img { max-width: 100%; border: 2px solid #444; margin: 10px 0; }
+        .info { background: #2a2a2a; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        code { background: #000; padding: 2px 6px; border-radius: 3px; color: #0ff; }
+    </style>
+</head>
+<body>
+    <h1>🛰️ ESRI Satellite Image Test</h1>
+    
+    <div class="info">
+        <h3>Test 1: Current Image (Siltara, Raipur)</h3>
+        <p><strong>Coordinates:</strong> 21.32°N, 81.69°E</p>
+        <p><strong>URL:</strong> <code id="url1"></code></p>
+        <img id="img1" alt="Current satellite imagery" />
+        <p id="status1">Loading...</p>
+    </div>
+
+    <div class="info">
+        <h3>Test 2: Historical Image (2020)</h3>
+        <p><strong>Date:</strong> 2020-01-15</p>
+        <p><strong>URL:</strong> <code id="url2"></code></p>
+        <img id="img2" alt="Historical satellite imagery" />
+        <p id="status2">Loading...</p>
+    </div>
+
+    <script>
+        const lat = 21.32;
+        const lon = 81.69;
+        const bboxKm = 2.0;
+
+        // Calculate bbox
+        const latDegPerKm = 1.0 / 111.32;
+        const lonDegPerKm = 1.0 / (111.32 * Math.cos(lat * Math.PI / 180));
+        const dlat = bboxKm * latDegPerKm;
+        const dlon = bboxKm * lonDegPerKm;
+
+        const bbox = {
+            min_lat: (lat - dlat).toFixed(6),
+            max_lat: (lat + dlat).toFixed(6),
+            min_lon: (lon - dlon).toFixed(6),
+            max_lon: (lon + dlon).toFixed(6)
+        };
+
+        // Current image URL
+        const currentUrl = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?bbox=${bbox.min_lon},${bbox.min_lat},${bbox.max_lon},${bbox.max_lat}&bboxSR=4326&imageSR=4326&size=1024,1024&format=png&f=image`;
+        
+        // Historical image URL
+        const historicalUrl = `https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/export?bbox=${bbox.min_lon},${bbox.min_lat},${bbox.max_lon},${bbox.max_lat}&bboxSR=4326&imageSR=4326&size=1024,1024&format=png&f=image`;
+
+        // Display URLs
+        document.getElementById('url1').textContent = currentUrl;
+        document.getElementById('url2').textContent = historicalUrl;
+
+        // Load images
+        const img1 = document.getElementById('img1');
+        const img2 = document.getElementById('img2');
+
+        img1.src = currentUrl;
+        img1.onload = () => {
+            document.getElementById('status1').textContent = '✅ Loaded successfully!';
+            document.getElementById('status1').style.color = '#0f0';
+        };
+        img1.onerror = (e) => {
+            document.getElementById('status1').textContent = '❌ Failed to load - CORS or URL error';
+            document.getElementById('status1').style.color = '#f00';
+            console.error('Image 1 error:', e);
+        };
+
+        img2.src = historicalUrl;
+        img2.onload = () => {
+            document.getElementById('status2').textContent = '✅ Loaded successfully!';
+            document.getElementById('status2').style.color = '#0f0';
+        };
+        img2.onerror = (e) => {
+            document.getElementById('status2').textContent = '❌ Failed to load - CORS or URL error';
+            document.getElementById('status2').style.color = '#f00';
+            console.error('Image 2 error:', e);
+        };
+
+        console.log('BBox:', bbox);
+        console.log('Current URL:', currentUrl);
+        console.log('Historical URL:', historicalUrl);
+    </script>
+</body>
+</html>

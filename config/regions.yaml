@@ -1,0 +1,476 @@
+# ══════════════════════════════════════════════════════════════════════
+# ILMCS — Region Configuration
+# All 56 Industrial Areas of Chhattisgarh (36 NEW + 20 OLD)
+# ══════════════════════════════════════════════════════════════════════
+
+monitoring:
+  satellite_revisit_days: 5           # Sentinel-2 revisit
+  cloud_cover_threshold: 20           # Max acceptable cloud %
+  change_detection_interval_days: 30  # Analysis frequency
+  buffer_tolerance_m: 5.0             # Boundary buffer (Sentinel-2 ½-pixel)
+  crs_storage: "EPSG:4326"
+  crs_computation: "EPSG:32644"       # UTM Zone 44N (Chhattisgarh)
+
+alert_thresholds:
+  iou_critical: 0.70
+  iou_warning: 0.85
+  area_deviation_critical: 0.20       # 20 %
+  area_deviation_warning: 0.10        # 10 %
+  encroachment_area_m2: 50            # Minimum encroachment area to flag
+
+risk_weights:
+  iou_weight: 0.30
+  area_deviation_weight: 0.25
+  encroachment_weight: 0.25
+  temporal_weight: 0.20
+
+regions:
+  # ── NEW Industrial Areas (36) ─────────────────────────────────────
+  - code: "CG-NEW-001"
+    name: "Siltara"
+    type: NEW
+    district: Raipur
+    lat: 21.3200
+    lon: 81.6900
+    area_hectares: 1200.0
+
+  - code: "CG-NEW-002"
+    name: "Urla"
+    type: NEW
+    district: Raipur
+    lat: 21.2500
+    lon: 81.5800
+    area_hectares: 340.0
+
+  - code: "CG-NEW-003"
+    name: "Bhanpuri"
+    type: NEW
+    district: Raipur
+    lat: 21.2700
+    lon: 81.6100
+    area_hectares: 180.0
+
+  - code: "CG-NEW-004"
+    name: "Rawabhata"
+    type: NEW
+    district: Raipur
+    lat: 21.2300
+    lon: 81.6300
+    area_hectares: 150.0
+
+  - code: "CG-NEW-005"
+    name: "Birgaon"
+    type: NEW
+    district: Raipur
+    lat: 21.1900
+    lon: 81.6500
+    area_hectares: 200.0
+
+  - code: "CG-NEW-006"
+    name: "Borai"
+    type: NEW
+    district: Durg
+    lat: 21.2100
+    lon: 81.3500
+    area_hectares: 420.0
+
+  - code: "CG-NEW-007"
+    name: "Bhilai"
+    type: NEW
+    district: Durg
+    lat: 21.2100
+    lon: 81.3800
+    area_hectares: 800.0
+
+  - code: "CG-NEW-008"
+    name: "Kumhari"
+    type: NEW
+    district: Durg
+    lat: 21.2600
+    lon: 81.3900
+    area_hectares: 280.0
+
+  - code: "CG-NEW-009"
+    name: "Anjora"
+    type: NEW
+    district: Durg
+    lat: 21.1700
+    lon: 81.3300
+    area_hectares: 190.0
+
+  - code: "CG-NEW-010"
+    name: "Hathkhoj"
+    type: NEW
+    district: Raipur
+    lat: 21.3000
+    lon: 81.7200
+    area_hectares: 250.0
+
+  - code: "CG-NEW-011"
+    name: "Tilda"
+    type: NEW
+    district: Raipur
+    lat: 21.4600
+    lon: 81.6200
+    area_hectares: 310.0
+
+  - code: "CG-NEW-012"
+    name: "Sarona"
+    type: NEW
+    district: Raipur
+    lat: 21.3500
+    lon: 81.6600
+    area_hectares: 170.0
+
+  - code: "CG-NEW-013"
+    name: "Nardaha"
+    type: NEW
+    district: Raipur
+    lat: 21.2800
+    lon: 81.7500
+    area_hectares: 140.0
+
+  - code: "CG-NEW-014"
+    name: "Lara"
+    type: NEW
+    district: Bilaspur
+    lat: 22.1200
+    lon: 82.1500
+    area_hectares: 220.0
+
+  - code: "CG-NEW-015"
+    name: "Sirgitti"
+    type: NEW
+    district: Bilaspur
+    lat: 22.0800
+    lon: 82.1200
+    area_hectares: 260.0
+
+  - code: "CG-NEW-016"
+    name: "Tifra"
+    type: NEW
+    district: Bilaspur
+    lat: 22.0500
+    lon: 82.1000
+    area_hectares: 180.0
+
+  - code: "CG-NEW-017"
+    name: "Korba"
+    type: NEW
+    district: Korba
+    lat: 22.3500
+    lon: 82.7000
+    area_hectares: 350.0
+
+  - code: "CG-NEW-018"
+    name: "Raigarh"
+    type: NEW
+    district: Raigarh
+    lat: 21.9000
+    lon: 83.4000
+    area_hectares: 290.0
+
+  - code: "CG-NEW-019"
+    name: "Janjgir"
+    type: NEW
+    district: Janjgir-Champa
+    lat: 22.0100
+    lon: 82.5700
+    area_hectares: 160.0
+
+  - code: "CG-NEW-020"
+    name: "Champa"
+    type: NEW
+    district: Janjgir-Champa
+    lat: 21.9700
+    lon: 82.6600
+    area_hectares: 140.0
+
+  - code: "CG-NEW-021"
+    name: "Jagdalpur"
+    type: NEW
+    district: Bastar
+    lat: 19.0800
+    lon: 82.0200
+    area_hectares: 200.0
+
+  - code: "CG-NEW-022"
+    name: "Dantewada"
+    type: NEW
+    district: Dantewada
+    lat: 18.9000
+    lon: 81.3500
+    area_hectares: 130.0
+
+  - code: "CG-NEW-023"
+    name: "Kanker"
+    type: NEW
+    district: Kanker
+    lat: 20.2700
+    lon: 81.4900
+    area_hectares: 150.0
+
+  - code: "CG-NEW-024"
+    name: "Rajnandgaon"
+    type: NEW
+    district: Rajnandgaon
+    lat: 21.1000
+    lon: 81.0300
+    area_hectares: 230.0
+
+  - code: "CG-NEW-025"
+    name: "Dongargarh"
+    type: NEW
+    district: Rajnandgaon
+    lat: 21.1900
+    lon: 80.7600
+    area_hectares: 120.0
+
+  - code: "CG-NEW-026"
+    name: "Kawardha"
+    type: NEW
+    district: Kabirdham
+    lat: 22.0200
+    lon: 81.2500
+    area_hectares: 140.0
+
+  - code: "CG-NEW-027"
+    name: "Mahasamund"
+    type: NEW
+    district: Mahasamund
+    lat: 21.1100
+    lon: 82.1000
+    area_hectares: 170.0
+
+  - code: "CG-NEW-028"
+    name: "Dhamtari"
+    type: NEW
+    district: Dhamtari
+    lat: 20.7100
+    lon: 81.5500
+    area_hectares: 150.0
+
+  - code: "CG-NEW-029"
+    name: "Gariaband"
+    type: NEW
+    district: Gariaband
+    lat: 20.6300
+    lon: 82.0700
+    area_hectares: 110.0
+
+  - code: "CG-NEW-030"
+    name: "Balod"
+    type: NEW
+    district: Balod
+    lat: 20.7300
+    lon: 81.2100
+    area_hectares: 130.0
+
+  - code: "CG-NEW-031"
+    name: "Bemetara"
+    type: NEW
+    district: Bemetara
+    lat: 21.7200
+    lon: 81.5300
+    area_hectares: 120.0
+
+  - code: "CG-NEW-032"
+    name: "Mungeli"
+    type: NEW
+    district: Mungeli
+    lat: 22.0700
+    lon: 81.6800
+    area_hectares: 100.0
+
+  - code: "CG-NEW-033"
+    name: "Surajpur"
+    type: NEW
+    district: Surajpur
+    lat: 23.2100
+    lon: 82.8700
+    area_hectares: 140.0
+
+  - code: "CG-NEW-034"
+    name: "Balrampur"
+    type: NEW
+    district: Balrampur
+    lat: 23.6300
+    lon: 83.6100
+    area_hectares: 120.0
+
+  - code: "CG-NEW-035"
+    name: "Ambikapur"
+    type: NEW
+    district: Surguja
+    lat: 23.1200
+    lon: 83.2000
+    area_hectares: 180.0
+
+  - code: "CG-NEW-036"
+    name: "Manendragarh"
+    type: NEW
+    district: Korea
+    lat: 23.2000
+    lon: 82.2200
+    area_hectares: 100.0
+
+  # ── OLD Industrial Areas (20) ─────────────────────────────────────
+  - code: "CG-OLD-001"
+    name: "Urla (Old)"
+    type: OLD
+    district: Raipur
+    lat: 21.2480
+    lon: 81.5780
+    area_hectares: 280.0
+
+  - code: "CG-OLD-002"
+    name: "Siltara (Old)"
+    type: OLD
+    district: Raipur
+    lat: 21.3180
+    lon: 81.6880
+    area_hectares: 450.0
+
+  - code: "CG-OLD-003"
+    name: "Bhilai (Old)"
+    type: OLD
+    district: Durg
+    lat: 21.2080
+    lon: 81.3780
+    area_hectares: 350.0
+
+  - code: "CG-OLD-004"
+    name: "Korba (Old)"
+    type: OLD
+    district: Korba
+    lat: 22.3480
+    lon: 82.6980
+    area_hectares: 220.0
+
+  - code: "CG-OLD-005"
+    name: "Raigarh (Old)"
+    type: OLD
+    district: Raigarh
+    lat: 21.8980
+    lon: 83.3980
+    area_hectares: 180.0
+
+  - code: "CG-OLD-006"
+    name: "Bilaspur (Old)"
+    type: OLD
+    district: Bilaspur
+    lat: 22.0780
+    lon: 82.1180
+    area_hectares: 200.0
+
+  - code: "CG-OLD-007"
+    name: "Rajnandgaon (Old)"
+    type: OLD
+    district: Rajnandgaon
+    lat: 21.0980
+    lon: 81.0280
+    area_hectares: 160.0
+
+  - code: "CG-OLD-008"
+    name: "Jagdalpur (Old)"
+    type: OLD
+    district: Bastar
+    lat: 19.0780
+    lon: 82.0180
+    area_hectares: 130.0
+
+  - code: "CG-OLD-009"
+    name: "Dhamtari (Old)"
+    type: OLD
+    district: Dhamtari
+    lat: 20.7080
+    lon: 81.5480
+    area_hectares: 100.0
+
+  - code: "CG-OLD-010"
+    name: "Kanker (Old)"
+    type: OLD
+    district: Kanker
+    lat: 20.2680
+    lon: 81.4880
+    area_hectares: 90.0
+
+  - code: "CG-OLD-011"
+    name: "Durg (Old)"
+    type: OLD
+    district: Durg
+    lat: 21.1900
+    lon: 81.2800
+    area_hectares: 240.0
+
+  - code: "CG-OLD-012"
+    name: "Kumhari (Old)"
+    type: OLD
+    district: Durg
+    lat: 21.2580
+    lon: 81.3880
+    area_hectares: 150.0
+
+  - code: "CG-OLD-013"
+    name: "Champa (Old)"
+    type: OLD
+    district: Janjgir-Champa
+    lat: 21.9680
+    lon: 82.6580
+    area_hectares: 110.0
+
+  - code: "CG-OLD-014"
+    name: "Ambikapur (Old)"
+    type: OLD
+    district: Surguja
+    lat: 23.1180
+    lon: 83.1980
+    area_hectares: 120.0
+
+  - code: "CG-OLD-015"
+    name: "Mahasamund (Old)"
+    type: OLD
+    district: Mahasamund
+    lat: 21.1080
+    lon: 82.0980
+    area_hectares: 100.0
+
+  - code: "CG-OLD-016"
+    name: "Bhanpuri (Old)"
+    type: OLD
+    district: Raipur
+    lat: 21.2680
+    lon: 81.6080
+    area_hectares: 130.0
+
+  - code: "CG-OLD-017"
+    name: "Birgaon (Old)"
+    type: OLD
+    district: Raipur
+    lat: 21.1880
+    lon: 81.6480
+    area_hectares: 140.0
+
+  - code: "CG-OLD-018"
+    name: "Borai (Old)"
+    type: OLD
+    district: Durg
+    lat: 21.2080
+    lon: 81.3480
+    area_hectares: 200.0
+
+  - code: "CG-OLD-019"
+    name: "Tilda (Old)"
+    type: OLD
+    district: Raipur
+    lat: 21.4580
+    lon: 81.6180
+    area_hectares: 170.0
+
+  - code: "CG-OLD-020"
+    name: "Janjgir (Old)"
+    type: OLD
+    district: Janjgir-Champa
+    lat: 22.0080
+    lon: 82.5680
+    area_hectares: 100.0
