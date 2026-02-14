@@ -17,7 +17,10 @@ import {
   Clock,
   Ruler,
   TrendingUp,
+  History,
 } from "lucide-react";
+import { useState } from "react";
+import PlotHistoryViewer from "./PlotHistoryViewer";
 
 const STATUS_STYLES = {
   Allotted: {
@@ -76,6 +79,8 @@ function InfoRow({ icon: Icon, label, value, valueClass = "" }) {
 }
 
 export default function PlotInfoPanel({ plot, onClose }) {
+  const [showHistory, setShowHistory] = useState(false);
+  
   if (!plot) return null;
 
   const status = STATUS_STYLES[plot.status] || STATUS_STYLES["Available"];
@@ -246,8 +251,14 @@ export default function PlotInfoPanel({ plot, onClose }) {
         )}
       </div>
 
-      {/* ─── Footer Actions ─── */}
-      <div className="shrink-0 px-5 py-4 border-t border-white/[0.06] space-y-2">
+      {/* ─── F
+          onClick={() => setShowHistory(true)}
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all"
+        >
+          <History className="w-4 h-4" />
+          View Historical Timeline
+          <ChevronRight className="w-4 h-4 ml-auto" />
+        </button>
         <button className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 text-white text-sm font-semibold shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all">
           <Eye className="w-4 h-4" />
           View Satellite Imagery
@@ -273,6 +284,14 @@ export default function PlotInfoPanel({ plot, onClose }) {
           <ChevronRight className="w-4 h-4 ml-auto" />
         </button>
       </div>
+
+      {/* Plot History Viewer Modal */}
+      {showHistory && (
+        <PlotHistoryViewer
+          plot={plot}
+          onClose={() => setShowHistory(false)}
+        />
+      )}
     </div>
   );
 }

@@ -1,5 +1,9 @@
 # ILMCS System Architecture Diagram
 
+![Architecture Diagram](architecture_diagram.png)
+
+## Interactive Mermaid Diagram
+
 ```mermaid
 graph TB
     subgraph "Data Sources"

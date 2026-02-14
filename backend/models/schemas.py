@@ -168,3 +168,32 @@ class RegionSearchResult(BaseModel):
     longitude: float
     total_plots: int
     area_hectares: float
+
+
+# ── Plot History ───────────────────────────────────────────────────
+class PlotHistoryRequest(BaseModel):
+    plot_id: str
+    plot_geojson: Dict[str, Any]
+    start_date: str = Field(..., description="Start date in YYYY-MM-DD format")
+    end_date: str = Field(..., description="End date in YYYY-MM-DD format")
+    num_snapshots: int = Field(6, ge=2, le=12, description="Number of historical snapshots to fetch")
+
+
+class PlotSnapshotData(BaseModel):
+    date: str
+    actual_date: str
+    days_diff: int
+    image_url: str
+    ndvi: float
+    built_up_percentage: float
+    vegetation_percentage: float
+
+
+class PlotHistoryResponse(BaseModel):
+    success: bool
+    plot_id: str
+    snapshots: List[Dict[str, Any]]
+    change_points: List[Dict[str, Any]]
+    anomalies: List[Dict[str, Any]] = []
+    summary: Dict[str, Any]
+    error: Optional[str] = None

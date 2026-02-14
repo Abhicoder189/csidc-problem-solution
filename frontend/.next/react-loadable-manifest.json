@@ -10,9 +10,5 @@
     "files": [
       "static/chunks/_app-pages-browser_node_modules_maplibre-gl_dist_maplibre-gl_js.js"
     ]
-  },
-  "components\\PlotInfoPanel.js -> @/lib/api": {
-    "id": "components\\PlotInfoPanel.js -> @/lib/api",
-    "files": []
   }
 }

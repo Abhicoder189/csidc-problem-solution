@@ -14,7 +14,8 @@ import {
   ArrowLeftRight,
 } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/api\/?$/, "");
+const API = `${API_BASE}/api`;
 
 export default function SatelliteCompare({ region, onClose }) {
   const [historicalDate, setHistoricalDate] = useState("2020-01-15");
@@ -24,7 +25,7 @@ export default function SatelliteCompare({ region, onClose }) {
   const [loadingHistorical, setLoadingHistorical] = useState(false);
   const [fullscreen, setFullscreen] = useState(null); // "current" | "historical" | null
   const [bboxKm, setBboxKm] = useState(2.0);
-  const [imageSource, setImageSource] = useState("osm"); // "osm", "esri", or "mapbox"
+  const [imageSource, setImageSource] = useState("esri"); // Forced to Satellite (ESRI)
 
   const today = new Date().toISOString().split("T")[0];
 
@@ -34,7 +35,7 @@ export default function SatelliteCompare({ region, onClose }) {
     console.log('Fetching current image for:', region.name, 'source:', imageSource);
     setLoadingCurrent(true);
     try {
-      const url = `${API}/api/satellite-image?lat=${region.latitude}&lon=${region.longitude}&bbox_km=${bboxKm}&source=${imageSource}`;
+      const url = `${API}/satellite-image?lat=${region.latitude}&lon=${region.longitude}&bbox_km=${bboxKm}&source=${imageSource}`;
       console.log('Current image URL:', url);
       const res = await fetch(url);
       if (res.ok) {
@@ -57,7 +58,7 @@ export default function SatelliteCompare({ region, onClose }) {
     console.log('Fetching historical image for:', region.name, 'date:', historicalDate, 'source:', imageSource);
     setLoadingHistorical(true);
     try {
-      const url = `${API}/api/satellite-image?lat=${region.latitude}&lon=${region.longitude}&date=${historicalDate}&bbox_km=${bboxKm}&source=${imageSource}`;
+      const url = `${API}/satellite-image?lat=${region.latitude}&lon=${region.longitude}&date=${historicalDate}&bbox_km=${bboxKm}&source=${imageSource}`;
       console.log('Historical image URL:', url);
       const res = await fetch(url);
       if (res.ok) {
@@ -159,11 +160,10 @@ export default function SatelliteCompare({ region, onClose }) {
               <button
                 key={preset.value}
                 onClick={() => setHistoricalDate(preset.value)}
-                className={`px-2.5 py-1 rounded-md text-xs font-semibold transition ${
-                  historicalDate === preset.value
-                    ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                    : "bg-white/[0.04] text-slate-500 hover:text-slate-300 border border-transparent hover:border-white/[0.08]"
-                }`}
+                className={`px-2.5 py-1 rounded-md text-xs font-semibold transition ${historicalDate === preset.value
+                  ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                  : "bg-white/[0.04] text-slate-500 hover:text-slate-300 border border-transparent hover:border-white/[0.08]"
+                  }`}
               >
                 {preset.label}
               </button>
@@ -172,26 +172,11 @@ export default function SatelliteCompare({ region, onClose }) {
 
           <div className="flex-1" />
 
-          {/* Image Source Selector */}
-          <div className="flex items-center gap-2">
+          {/* Image Source Selector - REMOVED (Forced to Satellite) */}
+          {/* <div className="flex items-center gap-2">
             <span className="text-xs text-slate-500">Source:</span>
-            {[
-              { value: "osm", label: "OSM" },
-              { value: "esri", label: "Satellite" },
-            ].map((src) => (
-              <button
-                key={src.value}
-                onClick={() => setImageSource(src.value)}
-                className={`px-2.5 py-1 rounded-md text-xs font-semibold transition ${
-                  imageSource === src.value
-                    ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
-                    : "bg-white/[0.04] text-slate-500 hover:text-slate-300 border border-transparent"
-                }`}
-              >
-                {src.label}
-              </button>
-            ))}
-          </div>
+             ...
+          </div> */}
 
           {/* Zoom/BBox Control */}
           <div className="flex items-center gap-2">
@@ -200,11 +185,10 @@ export default function SatelliteCompare({ region, onClose }) {
               <button
                 key={km}
                 onClick={() => setBboxKm(km)}
-                className={`px-2 py-1 rounded-md text-xs font-semibold transition ${
-                  bboxKm === km
-                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                    : "bg-white/[0.04] text-slate-500 hover:text-slate-300 border border-transparent"
-                }`}
+                className={`px-2 py-1 rounded-md text-xs font-semibold transition ${bboxKm === km
+                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                  : "bg-white/[0.04] text-slate-500 hover:text-slate-300 border border-transparent"
+                  }`}
               >
                 {km}km
               </button>
@@ -249,7 +233,7 @@ export default function SatelliteCompare({ region, onClose }) {
                   <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
                   <span className="text-xs text-slate-500">Loading current imagery…</span>
                 </div>
-              ) : currentImg?.image_url ? (
+              ) : currentImg?.image_url && currentImg.image_url.startsWith('http') ? (
                 <div className="relative w-full h-full flex items-center justify-center">
                   <img
                     src={currentImg.image_url}
@@ -265,9 +249,9 @@ export default function SatelliteCompare({ region, onClose }) {
                   <div style={{ display: 'none' }} className="flex flex-col items-center gap-2">
                     <Satellite className="w-8 h-8 text-red-600" />
                     <span className="text-xs text-red-400">Failed to load image</span>
-                    <a 
-                      href={currentImg.image_url} 
-                      target="_blank" 
+                    <a
+                      href={currentImg.image_url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-blue-400 hover:underline"
                     >
@@ -326,7 +310,7 @@ export default function SatelliteCompare({ region, onClose }) {
                   <Loader2 className="w-8 h-8 text-amber-400 animate-spin" />
                   <span className="text-xs text-slate-500">Loading historical imagery…</span>
                 </div>
-              ) : historicalImg?.image_url ? (
+              ) : historicalImg?.image_url && historicalImg.image_url.startsWith('http') ? (
                 <div className="relative w-full h-full flex items-center justify-center">
                   <img
                     src={historicalImg.image_url}
@@ -342,9 +326,9 @@ export default function SatelliteCompare({ region, onClose }) {
                   <div style={{ display: 'none' }} className="flex flex-col items-center gap-2">
                     <Satellite className="w-8 h-8 text-red-600" />
                     <span className="text-xs text-red-400">Failed to load image</span>
-                    <a 
-                      href={historicalImg.image_url} 
-                      target="_blank" 
+                    <a
+                      href={historicalImg.image_url}
+                      target="_blank"
                       rel="noopener noreferrer"
                       className="text-xs text-blue-400 hover:underline"
                     >

@@ -43,7 +43,7 @@ const MapViewInner = forwardRef(function MapViewInner({
   const labelMarkersRef = useRef([]);
   const [mapReady, setMapReady] = useState(false);
   const [mapError, setMapError] = useState(null);
-  const [isSatellite, setIsSatellite] = useState(false); // Start with OSM
+  const [isSatellite, setIsSatellite] = useState(true); // Default to Satellite (ESRI)
   const [plotsData, setPlotsData] = useState(null);
   const [hoveredPlot, setHoveredPlot] = useState(null);
   const [layerVisibility, setLayerVisibility] = useState({
@@ -486,17 +486,12 @@ const MapViewInner = forwardRef(function MapViewInner({
         </div>
       )}
 
-      {/* Style toggle */}
-      {mapReady && (
+      {/* Style toggle - REMOVED (Forced to Satellite) */}
+      {/* {mapReady && (
         <div className="absolute top-3 left-3 z-20">
-          <button
-            onClick={toggleStyle}
-            className="flex items-center gap-2 px-3 py-2 rounded-xl bg-[#0a0f1e]/85 backdrop-blur-xl border border-white/[0.08] shadow-xl text-xs font-medium text-slate-300 hover:text-white transition-all"
-          >
-            {isSatellite ? <><MapIcon className="w-3.5 h-3.5" /> Base Map</> : <><Satellite className="w-3.5 h-3.5" /> Satellite</>}
-          </button>
+           ...
         </div>
-      )}
+      )} */}
 
       {/* Region badge */}
       {selectedRegion && mapReady && (

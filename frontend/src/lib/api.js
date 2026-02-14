@@ -31,6 +31,12 @@ export async function detectChange(params) {
   return data;
 }
 
+/* ── Plot Timeline Analysis ────────────────────────────────────── */
+export async function analyzePlotTimeline(params) {
+  const { data } = await api.post("/plot/timeline-analysis", params);
+  return data;
+}
+
 /* ── Encroachment Detection ────────────────────────────────────── */
 export async function detectEncroachment(params) {
   const { data } = await api.post("/detect-encroachment", params);
@@ -69,19 +75,19 @@ export async function generateReport(params) {
 
 /* ── Dashboard ─────────────────────────────────────────────────── */
 export async function getDashboard() {
-  const { data } = await api.get("/dashboard");
+  const { data } = await api.get("/dashboard/"); // Ensure trailing slash for root router path
   return data;
 }
 
 /* ── Compliance Heatmap ────────────────────────────────────────── */
 export async function getComplianceHeatmap() {
-  const { data } = await api.get("/compliance-heatmap");
+  const { data } = await api.get("/dashboard/heatmap");
   return data;
 }
 
 /* ── Trend Analytics ───────────────────────────────────────────── */
 export async function getTrendAnalytics(regionId = null) {
-  const { data } = await api.get("/trend-analytics", {
+  const { data } = await api.get("/dashboard/trend-analytics", {
     params: regionId ? { region_id: regionId } : {},
   });
   return data;

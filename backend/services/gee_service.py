@@ -222,24 +222,51 @@ def fetch_sentinel2_imagery(
         logger.warning(f"GEE fetch failed: {e} — falling back to Mapbox tiles")
 
     # ── Fallback: use Mapbox/ESRI satellite tiles ──────────────────
-    z = 14
-    tile_url = (
-        f"https://server.arcgisonline.com/ArcGIS/rest/services/"
-        f"World_Imagery/MapServer/tile/{z}/{{y}}/{{x}}"
+    
+    # Check if this is a historical request
+    is_historical = False
+    if end_date:
+        try:
+            req_year = int(str(end_date).split("-")[0])
+            if req_year < datetime.now().year:
+                is_historical = True
+        except:
+            pass
+
+    # CACHE BUSTING STRATEGY:
+    # We cannot add arbitrary params like '&ts=' to ESRI REST API (it breaks).
+    # Instead, we slightly shift the bbox for historical requests.
+    # This creates a VALID but UNIQUE URL for the browser.
+    
+    request_bbox = bbox.copy()
+    if is_historical or end_date:
+        # Slight perturbation (approx 10 meters) to force distinct URL
+        offset = 0.0001
+        request_bbox["min_lat"] += offset
+        request_bbox["max_lat"] += offset
+        request_bbox["min_lon"] += offset
+        request_bbox["max_lon"] += offset
+
+    base_url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export"
+    
+    image_url = (
+        f"{base_url}?bbox={request_bbox['min_lon']},{request_bbox['min_lat']},{request_bbox['max_lon']},{request_bbox['max_lat']}"
+        f"&bboxSR=4326&imageSR=4326&size=1024,1024&format=png&f=image"
     )
     
+    thumb_url = (
+        f"{base_url}?bbox={request_bbox['min_lon']},{request_bbox['min_lat']},{request_bbox['max_lon']},{request_bbox['max_lat']}"
+        f"&bboxSR=4326&imageSR=4326&size=512,512&format=png&f=image"
+    )
+
     return {
-        "image_url": f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export"
-                     f"?bbox={bbox['min_lon']},{bbox['min_lat']},{bbox['max_lon']},{bbox['max_lat']}"
-                     f"&bboxSR=4326&imageSR=4326&size=1024,1024&format=png&f=image",
-        "thumbnail_url": f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export"
-                         f"?bbox={bbox['min_lon']},{bbox['min_lat']},{bbox['max_lon']},{bbox['max_lat']}"
-                         f"&bboxSR=4326&imageSR=4326&size=512,512&format=png&f=image",
+        "image_url": image_url,
+        "thumbnail_url": thumb_url,
         "ndvi_url": None,
         "acquisition_date": end_date,
         "cloud_cover": 0,
         "bands": ["R", "G", "B"],
-        "metadata": {"source": "ESRI_WorldImagery", "mode": "demo"},
+        "metadata": {"source": "ESRI_WorldImagery", "mode": "demo_fallback", "simulated_historical": is_historical},
     }
 
 

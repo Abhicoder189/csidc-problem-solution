@@ -1,5 +1,9 @@
 # ILMCS System Workflow Diagram
 
+![Workflow Diagram](workflow_diagram.png)
+
+## Interactive Mermaid Diagram
+
 ```mermaid
 flowchart TD
     Start([New Monitoring Request]) --> Select[Select Region & Time Period]
